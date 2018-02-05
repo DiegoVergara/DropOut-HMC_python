@@ -72,7 +72,7 @@ python keras_vgg_face_features.py
 
 * Python 2.7
 
-* Tensorflow 1.3 or later, tensorflow-gpu (alternative)
-* edward 1.3 or later
-* keras 2.1 or later, keras-vggface
-* sklearn, numpy, scipy, pandas, seaborn, matplotlib (according to dependence on previous packages)
+* Tensorflow 1.3 or later, Tensorflow-gpu (alternative)
+* Edward 1.3 or later
+* Keras 2.1 or later, keras-vggface
+* SKlearn, Numpy, Scipy, Pandas, Seaborn, Matplotlib (according to dependence on previous packages)

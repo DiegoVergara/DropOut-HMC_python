@@ -13,10 +13,10 @@ from sklearn.metrics import confusion_matrix
 
 sns.set(color_codes=True)
 
-X_train = pd.read_csv("../data/ADIENCE/vgg_face_max/X_train.csv", sep =",", names = None, header = None)
-Y_train = pd.read_csv("../data/ADIENCE/vgg_face_max/Y_train.csv", sep =",", names = None, header = None)
-X_test = pd.read_csv("../data/ADIENCE/vgg_face_max/X_test.csv", sep =",", names = None, header = None)
-Y_test = pd.read_csv("../data/ADIENCE/vgg_face_max/Y_test.csv", sep =",", names = None, header = None)
+X_train = pd.read_csv("../data/ADIENCE/vgg_face_avg/X_train.csv", sep =",", names = None, header = None)
+Y_train = pd.read_csv("../data/ADIENCE/vgg_face_avg/Y_train.csv", sep =",", names = None, header = None)
+X_test = pd.read_csv("../data/ADIENCE/vgg_face_avg/X_test.csv", sep =",", names = None, header = None)
+Y_test = pd.read_csv("../data/ADIENCE/vgg_face_avg/Y_test.csv", sep =",", names = None, header = None)
 nb_classes = len(Y_train[0].unique())
 
 #FOLDER RESULTS

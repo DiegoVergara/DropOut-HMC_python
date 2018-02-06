@@ -87,11 +87,12 @@ for k in range(p_samples):
     sample = tf.concat([tf.reshape(w_samp,[-1]),b_samp],0)
     samples.append(sample.eval())
 
+Y_test = Y_test.values.flatten()
 
 accy_test = []
 for prob in prob_lst:
     y_trn_prd = np.argmax(prob,axis=1).astype(np.float32)
-    acc = (y_trn_prd == Y_test.values).mean()*100
+    acc = (y_trn_prd == Y_test).mean()*100
     accy_test.append(acc)
 
 print "Elapsed time %f, seconds" % (time.time()-start_time)
@@ -106,7 +107,7 @@ Y_pred = np.argmax(np.mean(prob_lst,axis=0),axis=1)
 print(classification_report(Y_test, Y_pred))
 print confusion_matrix(Y_test, Y_pred)
 
-print "accuracy in predicting the test data = %.3f :" % (Y_pred == Y_test.values).mean()*100
+print "accuracy in predicting the test data = %.3f :" % (Y_pred == Y_test).mean()*100
 
 result = np.concatenate((prob_mean, np.reshape(prob_max,(-1,1)), np.reshape(Y_pred,(-1,1)),np.reshape(Y_test,(-1,1)),prob_std),axis=1)
 np.savetxt(path+"SGHMC_age_analysis.csv", result, fmt="%1.3f", header ="mean_0, mean_1, mean_2, mean_3, mean_4, mean_5, mean_6, mean_7, max_prob, pred, GT, std_0, std_1, std_2, std_3, std_4, std_5, std_6, std_7",delimiter = ",")

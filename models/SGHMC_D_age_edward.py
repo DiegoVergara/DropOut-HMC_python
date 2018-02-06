@@ -90,6 +90,7 @@ for k in range(p_samples):
     sample = tf.concat([tf.reshape(w_samp,[-1]),b_samp],0)
     samples.append(sample.eval())
 
+Y_test = Y_test.values.flatten()
 
 accy_test = []
 for prob in prob_lst:
@@ -109,7 +110,7 @@ Y_pred = np.argmax(np.mean(prob_lst,axis=0),axis=1)
 print(classification_report(Y_test, Y_pred))
 print confusion_matrix(Y_test, Y_pred)
 
-print "accuracy in predicting the test data = %.3f :" % (Y_pred == Y_test.values).mean()*100
+print "accuracy in predicting the test data = %.3f :" % (Y_pred == Y_test).mean()*100
 
 result = np.concatenate((prob_mean, np.reshape(prob_max,(-1,1)), np.reshape(Y_pred,(-1,1)),np.reshape(Y_test,(-1,1)),prob_var),axis=1)
 np.savetxt(path+"SGHMC_D_age_analysis.csv", result, fmt="%1.3f", header ="mean_0, mean_1, mean_2, mean_3, mean_4, mean_5, mean_6, mean_7, max_prob, pred, GT, var_0, var_1, var_2, var_3, var_4, var_5, var_6, var_7",delimiter = ",")

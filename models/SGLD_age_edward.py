@@ -86,6 +86,7 @@ for k in range(p_samples):
     sample = tf.concat([tf.reshape(w_samp,[-1]),b_samp],0)
     samples.append(sample.eval())
 
+Y_test = Y_test.values.flatten()
 
 accy_test = []
 for prob in prob_lst:

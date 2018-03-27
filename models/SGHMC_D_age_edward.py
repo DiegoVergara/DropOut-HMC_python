@@ -10,7 +10,7 @@ from sklearn.preprocessing import LabelBinarizer
 import time
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
-
+import csv
 sns.set(color_codes=True)
 
 X_train = pd.read_csv("../data/ADIENCE/vgg_face_avg/X_train.csv", sep =",", names = None, header = None)
@@ -19,14 +19,14 @@ X_test = pd.read_csv("../data/ADIENCE/vgg_face_avg/X_test.csv", sep =",", names 
 Y_test = pd.read_csv("../data/ADIENCE/vgg_face_avg/Y_test.csv", sep =",", names = None, header = None)
 nb_classes = len(Y_train[0].unique())
     
-path = ""
+path = "result_age/sghmc_d_08/"
 '''
 lb = LabelBinarizer()
 Y_train = lb.fit_transform(Y_train)
 Y_test = lb.transform(Y_test)
 '''
 start_time = time.time()
-ed.set_seed(314159)
+#ed.set_seed(314159)
 N = 100   # number of images in a minibatch.
 D = X_train.shape[1]   # number of features.
 num_examples = X_train.shape[0]
@@ -36,8 +36,8 @@ epoch = 100
 num_batches = int(float(num_examples) / N)
 n_samples=epoch*num_batches
 friction=1.0
-step_size = 1e-2
-d_rate = 1.0
+step_size = 1e-4
+d_rate = 0.8
 
 print "Epoch: %d, MiniBatch: %d, N Samples: %d, P Samples: %d, Friction: %.5f, StepSize: %.5f, DropOutRate: %.2f." % (epoch, N, n_samples, p_samples, friction, step_size, d_rate)
 
@@ -97,6 +97,10 @@ for prob in prob_lst:
     y_trn_prd = np.argmax(prob,axis=1).astype(np.float32)
     acc = (y_trn_prd == Y_test).mean()*100
     accy_test.append(acc)
+
+with open(path+"histogram.csv", 'w') as myfile:
+     wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+     wr.writerow(accy_test)
 
 print "Elapsed time %f, seconds" % (time.time()-start_time)
 

@@ -10,7 +10,7 @@ from sklearn.preprocessing import LabelBinarizer
 import time
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
-
+import csv
 sns.set(color_codes=True)
 
 X_train = pd.read_csv("../data/ADIENCE/vgg_face_avg/X_train.csv", sep =",", names = None, header = None)
@@ -25,7 +25,7 @@ Y_train = lb.fit_transform(Y_train)
 Y_test = lb.transform(Y_test)
 '''
 start_time = time.time()
-ed.set_seed(314159)
+#ed.set_seed(314159)
 N = 100   # number of images in a minibatch.
 D = X_train.shape[1]   # number of features.
 num_examples = X_train.shape[0]
@@ -36,7 +36,7 @@ num_batches = int(float(num_examples) / N)
 n_samples=epoch*num_batches
 step_size = 1e-4
 
-path = ""
+path = "result_age5/sgld/"
 
 print "Epoch: %d, MiniBatch: %d, N Samples: %d, P Samples: %d, StepSize: %.5f." % (epoch, N, n_samples, p_samples, step_size)
 
@@ -50,10 +50,10 @@ qb= Empirical(params=tf.Variable(tf.random_normal([n_samples,K])))
       
 y_ph = tf.placeholder(tf.int32, [N])
 #inference = ed.KLqp({w: qw, b: qb}, data={y:y_ph})
-inference = ed.SGHMC({w: qw, b: qb}, data={y:y_ph})
+inference = ed.SGLD({w: qw, b: qb}, data={y:y_ph})
 
 
-inference.initialize(n_iter=n_samples+500, n_print=n_samples, scale={y: num_batches},step_size=step_size,friction=friction)
+inference.initialize(n_iter=n_samples+500, n_print=n_samples, scale={y: num_batches},step_size=step_size)
 
 sess = tf.InteractiveSession()
 tf.global_variables_initializer().run()
@@ -94,10 +94,14 @@ for prob in prob_lst:
     acc = (y_trn_prd == Y_test).mean()*100
     accy_test.append(acc)
 
+with open(path+"histogram.csv", 'w') as myfile:
+     wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+     wr.writerow(accy_test)
+
 print "Elapsed time %f, seconds" % (time.time()-start_time)
 
 prob_mean = np.mean(prob_lst,axis=0)
-prob_std = np.std(prob_lst,axis=0)
+prob_var = np.var(prob_lst,axis=0)
 prob_max = np.max(prob_mean,axis=1)
 
 
@@ -108,8 +112,8 @@ print confusion_matrix(Y_test, Y_pred)
 
 print "accuracy in predicting the test data = %.3f :" % (Y_pred == Y_test).mean()*100
 
-result = np.concatenate((prob_mean, np.reshape(prob_max,(-1,1)), np.reshape(Y_pred,(-1,1)),np.reshape(Y_test,(-1,1)),prob_std),axis=1)
-np.savetxt(path+"SGLD_age_analysis.csv", result, fmt="%1.3f", header ="mean_0, mean_1, mean_2, mean_3, mean_4, mean_5, mean_6, mean_7, max_prob, pred, GT, std_0, std_1, std_2, std_3, std_4, std_5, std_6, std_7",delimiter = ",")
+result = np.concatenate((prob_mean, np.reshape(prob_max,(-1,1)), np.reshape(Y_pred,(-1,1)),np.reshape(Y_test,(-1,1)),prob_var),axis=1)
+np.savetxt(path+"SGLD_age_analysis.csv", result, fmt="%1.3f", header ="mean_0, mean_1, mean_2, mean_3, mean_4, mean_5, mean_6, mean_7, max_prob, pred, GT, var_0, var_1, var_2, var_3, var_4, var_5, var_6, var_7",delimiter = ",")
 
 
 #sns.distplot(accy_test)

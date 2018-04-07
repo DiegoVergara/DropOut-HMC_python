@@ -36,7 +36,7 @@ num_batches = int(float(num_examples) / N)
 n_samples=epoch*num_batches
 step_size = 1e-4
 
-path = "result_age5/sgld/"
+path = "result_age_final/sgld/"
 
 print "Epoch: %d, MiniBatch: %d, N Samples: %d, P Samples: %d, StepSize: %.5f." % (epoch, N, n_samples, p_samples, step_size)
 
@@ -102,8 +102,9 @@ print "Elapsed time %f, seconds" % (time.time()-start_time)
 
 prob_mean = np.mean(prob_lst,axis=0)
 prob_var = np.var(prob_lst,axis=0)
+prob_min = np.min(prob_lst,axis=0)
+prob_max = np.max(prob_lst,axis=0)
 prob_max = np.max(prob_mean,axis=1)
-
 
 Y_pred = np.argmax(np.mean(prob_lst,axis=0),axis=1)
 
@@ -112,9 +113,8 @@ print confusion_matrix(Y_test, Y_pred)
 
 print "accuracy in predicting the test data = %.3f :" % (Y_pred == Y_test).mean()*100
 
-result = np.concatenate((prob_mean, np.reshape(prob_max,(-1,1)), np.reshape(Y_pred,(-1,1)),np.reshape(Y_test,(-1,1)),prob_var),axis=1)
-np.savetxt(path+"SGLD_age_analysis.csv", result, fmt="%1.3f", header ="mean_0, mean_1, mean_2, mean_3, mean_4, mean_5, mean_6, mean_7, max_prob, pred, GT, var_0, var_1, var_2, var_3, var_4, var_5, var_6, var_7",delimiter = ",")
-
+result = np.concatenate((prob_mean, np.reshape(prob_max,(-1,1)), np.reshape(Y_pred,(-1,1)),np.reshape(Y_test,(-1,1)),prob_var, prob_min, prob_max),axis=1)
+np.savetxt(path+"SGLD_age_analysis.csv", result, fmt="%1.3f", header ="mean_0, mean_1, mean_2, mean_3, mean_4, mean_5, mean_6, mean_7, max_prob, pred, GT, var_0, var_1, var_2, var_3, var_4, var_5, var_6, var_7, min_0, min_1, min_2, min_3, min_4, min_5, min_6, min_7, max_0, max_1, max_2, max_3, max_4, max_5, max_6, max_7",delimiter = ",")
 
 #sns.distplot(accy_test)
 plt.hist(accy_test)

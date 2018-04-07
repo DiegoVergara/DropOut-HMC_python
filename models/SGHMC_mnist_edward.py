@@ -25,7 +25,7 @@ else:
 sns.set(color_codes=True)
 mnist = input_data.read_data_sets("../data/MNIST/", one_hot=True) 
 start_time = time.time()
-#ed.set_seed(314159)
+ed.set_seed(314159)
 N = 100   # number of images in a minibatch.
 D = 784   # number of features.
 K = 10    # number of classes.
@@ -38,7 +38,7 @@ friction=1.0
 step_size = 1e-4
 
 
-path = "result_mnist5/sghmc/"
+path = "result_mnist_final/sghmc/"
 print "Epoch: %d, MiniBatch: %d, N Samples: %d, P Samples: %d, Friction: %.5f, StepSize: %.5f." % (epoch, N, n_samples, p_samples, friction, step_size)
 
 x = tf.placeholder(tf.float32, [None, D])
@@ -106,6 +106,8 @@ print "Elapsed time %f, seconds" % (time.time()-start_time)
 
 prob_mean = np.mean(prob_lst,axis=0)
 prob_var = np.var(prob_lst,axis=0)
+prob_min = np.min(prob_lst,axis=0)
+prob_max = np.max(prob_lst,axis=0)
 prob_max = np.max(prob_mean,axis=1)
 
 
@@ -116,8 +118,8 @@ print confusion_matrix(Y_test, Y_pred)
 
 print "accuracy in predicting the test data = %.3f :" % (Y_pred == Y_test).mean()*100
 
-result = np.concatenate((prob_mean, np.reshape(prob_max,(-1,1)), np.reshape(Y_pred,(-1,1)),np.reshape(Y_test,(-1,1)),prob_var),axis=1)
-np.savetxt(path+"SGHMC_mnist_analysis.csv", result, fmt="%1.3f", header ="mean_0, mean_1, mean_2, mean_3, mean_4, mean_5, mean_6, mean_7, mean_8, mean_9, max_prob, pred, GT, var_0, var_1, var_2, var_3, var_4, var_5, var_6, var_7, var_8, var_9",delimiter = ",")
+result = np.concatenate((prob_mean, np.reshape(prob_max,(-1,1)), np.reshape(Y_pred,(-1,1)),np.reshape(Y_test,(-1,1)),prob_var, prob_min, prob_max),axis=1)
+np.savetxt(path+"SGHMC_mnist_analysis.csv", result, fmt="%1.3f", header ="mean_0, mean_1, mean_2, mean_3, mean_4, mean_5, mean_6, mean_7, mean_8, mean_9, max_prob, pred, GT, var_0, var_1, var_2, var_3, var_4, var_5, var_6, var_7, var_8, var_9, min_0, min_1, min_2, min_3, min_4, min_5, min_6, min_7, min_8, min_9, max_0, max_1, max_2, max_3, max_4, max_5, max_6, max_7, max_8, max_9",delimiter = ",")
 
 
 #sns.distplot(accy_test)

@@ -25,7 +25,7 @@ else:
 sns.set(color_codes=True)
 mnist = input_data.read_data_sets("../data/MNIST/", one_hot=True) 
 start_time = time.time()
-#ed.set_seed(314159)
+ed.set_seed(314159)
 N = 100   # number of images in a minibatch.
 D = 784   # number of features.
 K = 10    # number of classes.
@@ -36,10 +36,10 @@ num_batches = int(float(num_examples) / N)
 n_samples=epoch*num_batches
 friction=1.0
 step_size = 1e-4
-d_rate = 0.9
+d_rate = 0.5
 
 
-path = "result_mnist_final/sghmc_d_09/"
+path = "result_mnist_final/sghmc_d_05/"
 print "Epoch: %d, MiniBatch: %d, N Samples: %d, P Samples: %d, Friction: %.5f, StepSize: %.5f, DropOutRate: %.2f." % (epoch, N, n_samples, p_samples, friction, step_size, d_rate)
 
 x = tf.placeholder(tf.float32, [None, D])

@@ -25,7 +25,7 @@ Y_train = lb.fit_transform(Y_train)
 Y_test = lb.transform(Y_test)
 '''
 start_time = time.time()
-#ed.set_seed(314159)
+ed.set_seed(314159)
 N = 100   # number of images in a minibatch.
 D = X_train.shape[1]   # number of features.
 num_examples = X_train.shape[0]

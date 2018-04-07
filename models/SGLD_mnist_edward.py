@@ -25,7 +25,7 @@ else:
 sns.set(color_codes=True)
 mnist = input_data.read_data_sets("../data/MNIST/", one_hot=True) 
 start_time = time.time()
-#ed.set_seed(314159)
+ed.set_seed(314159)
 N = 100   # number of images in a minibatch.
 D = 784   # number of features.
 K = 10    # number of classes.

@@ -132,7 +132,7 @@ for j in examples:
         example_lst.append(prob_lst[i][j-2])
     example_array = np.asarray(example_lst)
     plt.boxplot(example_array,whis=[15,85])
-    plt.xticks(np.arange(1,11), np.arange(0,10))
+    plt.xticks(np.arange(1,9), np.arange(0,8))
     #plt.xlim(0,10)
     plt.title("Class Probability")
     plt.ylabel("Probability")

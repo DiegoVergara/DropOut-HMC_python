@@ -118,7 +118,7 @@ print "accuracy in predicting the test data = %.3f :" % (Y_pred == Y_test).mean(
 result = np.concatenate((prob_mean, np.reshape(prob_v_max,(-1,1)), np.reshape(Y_pred,(-1,1)),np.reshape(Y_test,(-1,1)),prob_var, prob_min, prob_max),axis=1)
 np.savetxt(path+"SGLD_mnist_analysis.csv", result, fmt="%1.3f", header ="mean_0, mean_1, mean_2, mean_3, mean_4, mean_5, mean_6, mean_7, mean_8, mean_9, max_prob, pred, GT, var_0, var_1, var_2, var_3, var_4, var_5, var_6, var_7, var_8, var_9, min_0, min_1, min_2, min_3, min_4, min_5, min_6, min_7, min_8, min_9, max_0, max_1, max_2, max_3, max_4, max_5, max_6, max_7, max_8, max_9",delimiter = ",")
 
-with open('prob_lst', 'wb') as fp:
+with open(path+'prob_lst', 'wb') as fp:
     pickle.dump(prob_lst, fp)
 
 examples = [94, 292]
@@ -139,7 +139,7 @@ for j in examples:
 
 #sns.distplot(accy_test)
 plt.hist(accy_test)
-plt.title("Histogram of prediction accuracies in the MNIST test data")
+plt.title("Accuracy in predictions")
 plt.xlabel("Accuracy")
 plt.ylabel("Frequency")
 plt.savefig(path+"SGLD_MNIST_t_data_acc_freq.pdf", format='pdf')
@@ -176,8 +176,9 @@ for w_samp,b_samp in zip(w_samples,b_samples):
 plt.hist(np.argmax(sing_img_probs,axis=2),bins=range(10))
 plt.xticks(np.arange(0,10))
 plt.xlim(0,10)
-plt.xlabel("Accuracy in prediction from MNIST Test set")
+plt.title("Accuracy in prediction from MNIST Test set")
 plt.ylabel("Frequency")
+plt.xlabel("Class")
 plt.savefig(path+"SGLD_MNIST_digit_acc_freq.pdf", format='pdf')
 #plt.show()
 plt.close()

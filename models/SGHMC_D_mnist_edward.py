@@ -12,7 +12,7 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 import csv
 import ssl
-
+import pickle
 try:
     _create_unverified_https_context = ssl._create_unverified_context
 except AttributeError:
@@ -125,13 +125,31 @@ print "accuracy in predicting the test data = %.3f :" % (Y_pred == Y_test).mean(
 result = np.concatenate((prob_mean, np.reshape(prob_v_max,(-1,1)), np.reshape(Y_pred,(-1,1)),np.reshape(Y_test,(-1,1)),prob_var, prob_min, prob_max),axis=1)
 np.savetxt(path+"SGHMC_D_mnist_analysis.csv", result, fmt="%1.3f", header ="mean_0, mean_1, mean_2, mean_3, mean_4, mean_5, mean_6, mean_7, mean_8, mean_9, max_prob, pred, GT, var_0, var_1, var_2, var_3, var_4, var_5, var_6, var_7, var_8, var_9, min_0, min_1, min_2, min_3, min_4, min_5, min_6, min_7, min_8, min_9, max_0, max_1, max_2, max_3, max_4, max_5, max_6, max_7, max_8, max_9",delimiter = ",")
 
+with open('prob_lst', 'wb') as fp:
+    pickle.dump(prob_lst, fp)
+
+examples = [94, 292]
+for j in examples:
+    example_lst = []
+    for i in range(0,len(prob_lst)):
+        example_lst.append(prob_lst[i][j-2])
+    example_array = np.asarray(example_lst)
+    plt.boxplot(example_array,whis=[15,85])
+    plt.xticks(np.arange(1,11), np.arange(0,10))
+    #plt.xlim(0,10)
+    plt.title("Class Probability")
+    plt.ylabel("Probability")
+    plt.xlabel("Class")
+    plt.savefig(path+"SGHMC_D_MNIST_digit_box_"+str(j)+".pdf", format='pdf')
+    plt.close()
+
 
 #sns.distplot(accy_test)
 plt.hist(accy_test)
 plt.title("Histogram of prediction accuracies in the MNIST test data")
 plt.xlabel("Accuracy")
 plt.ylabel("Frequency")
-plt.savefig(path+"SGHMC_D_MNIST_t_data_acc_freq.png")
+plt.savefig(path+"SGHMC_D_MNIST_t_data_acc_freq.pdf", format='pdf')
 #plt.show()
 plt.close()
 
@@ -143,7 +161,7 @@ g.map_upper(plt.scatter)
 g.map_diag(sns.kdeplot,legend=False)
 plt.subplots_adjust(top=0.95)
 g.fig.suptitle('Joint posterior distribution of the first 5 weights')
-plt.savefig(path+"SGHMC_D_MNIST_first_5_w.png")
+plt.savefig(path+"SGHMC_D_MNIST_first_5_w.pdf", format='pdf')
 #plt.show()
 plt.close()
 
@@ -152,7 +170,7 @@ test_label = Y_test[4]
 print('truth = ',test_label)
 pixels = test_image.reshape((28, 28))
 plt.imshow(pixels,cmap='Blues')
-plt.savefig(path+"SGHMC_D_MNIST_gt.png")
+plt.savefig(path+"SGHMC_D_MNIST_gt.pdf", format='pdf')
 #plt.show()
 plt.close()
 
@@ -167,7 +185,7 @@ plt.xticks(np.arange(0,10))
 plt.xlim(0,10)
 plt.xlabel("Accuracy of the prediction of the test digit")
 plt.ylabel("Frequency")
-plt.savefig(path+"SGHMC_D_MNIST_digit_acc_freq.png")
+plt.savefig(path+"SGHMC_D_MNIST_digit_acc_freq.pdf", format='pdf')
 #plt.show()
 plt.close()
 

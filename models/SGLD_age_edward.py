@@ -11,6 +11,7 @@ import time
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 import csv
+import pickle
 sns.set(color_codes=True)
 
 X_train = pd.read_csv("../data/ADIENCE/vgg_face_avg/X_train.csv", sep =",", names = None, header = None)
@@ -116,12 +117,30 @@ print "accuracy in predicting the test data = %.3f :" % (Y_pred == Y_test).mean(
 result = np.concatenate((prob_mean, np.reshape(prob_v_max,(-1,1)), np.reshape(Y_pred,(-1,1)),np.reshape(Y_test,(-1,1)),prob_var, prob_min, prob_max),axis=1)
 np.savetxt(path+"SGLD_age_analysis.csv", result, fmt="%1.3f", header ="mean_0, mean_1, mean_2, mean_3, mean_4, mean_5, mean_6, mean_7, max_prob, pred, GT, var_0, var_1, var_2, var_3, var_4, var_5, var_6, var_7, min_0, min_1, min_2, min_3, min_4, min_5, min_6, min_7, max_0, max_1, max_2, max_3, max_4, max_5, max_6, max_7",delimiter = ",")
 
+with open('prob_lst', 'wb') as fp:
+    pickle.dump(prob_lst, fp)
+
+examples = [76, 505]
+for j in examples:
+    example_lst = []
+    for i in range(0,len(prob_lst)):
+        example_lst.append(prob_lst[i][j-2])
+    example_array = np.asarray(example_lst)
+    plt.boxplot(example_array,whis=[15,85])
+    plt.xticks(np.arange(1,11), np.arange(0,10))
+    #plt.xlim(0,10)
+    plt.title("Class Probability")
+    plt.ylabel("Probability")
+    plt.xlabel("Class")
+    plt.savefig(path+"SGLD_ADIENCE_digit_box_"+str(j)+".pdf", format='pdf')
+    plt.close()
+
 #sns.distplot(accy_test)
 plt.hist(accy_test)
 plt.title("Histogram of prediction accuracies in the AGE test data")
 plt.xlabel("Accuracy")
 plt.ylabel("Frequency")
-plt.savefig(path+"SGLD_AGE_t_data_acc_freq.png")
+plt.savefig(path+"SGLD_AGE_t_data_acc_freq.pdf", format='pdf')
 #plt.show()
 plt.close()
 
